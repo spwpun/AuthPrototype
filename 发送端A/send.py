@@ -26,21 +26,19 @@ def main():
     f.close()
 
     hex_key = a2hex(key)
-    print ("[+]Hex Key: ", hex_key)
     hex_message = a2hex(message)
-    print ("[+]Hex Message: ", hex_message)
     hM = Sha_1(message)    #消息的认证码
     cipher = ECB_encrypt(hex_message,hex_key)
     auth = rsa_encrypt(hM,int(ad,16),int(an,16)) #对消息认证码使用rsa加密
     sessionkey = rsa_encrypt(key,int(be,16),int(bn,16))
-    print ('明文通过DES_ECB加密后的结果：',cipher)
-    print ('数字签名：',auth)
-    print ('会话密钥：',sessionkey)
+    print ('[info ]明文通过DES_ECB加密后的结果：',cipher)
+    print ('[info ]数字签名：',auth)
+    print ('[info ]会话密钥：',sessionkey)
     #发送消息，用写入文件来模拟
     f = open('../接收端B/r_message.txt','w')
     f.writelines(hM+'\n'+cipher+'\n'+auth+'\n'+sessionkey)
     f.close()
-    print("消息已发送到接收端！")
+    print("[info ]消息已发送到接收端！")
 
 
 #SHA-1算法

@@ -20,19 +20,19 @@ def main():
     f = open('A_N.txt','r')
     an = int(f.read(),16)
     f.close()
-
-    hM,cipher,auth,sessionkey = messages[0][0:-1],messages[1][0:-1],messages[2][0:-1],messages[3]#去掉最后的换行符号
+    #读取message中的数据按照约定的格式赋值，并去掉最后的换行符号
+    hM,cipher,auth,sessionkey = messages[0][0:-1],messages[1][0:-1],messages[2][0:-1],messages[3]
     key = rsa_decrypt(sessionkey,bd,bn)
     hex_key = a2hex(key)
     info = ECB_decrypt(cipher,hex_key)
     info = hex2a(info)
     hm = Sha_1(info)
     Hm = rsa_decrypt(auth,ae,an)      #进行签名验证
-    print("用私钥解密得到会话密钥：",key)
-    print("用会话密钥解密密文的到明文：",info)
     #通过比较认证码来进行消息认证和身份鉴别
     if Hm == hM and hm == hM:
         print("验证成功！")
+        print("用私钥解密得到会话密钥：",key)
+        print("用会话密钥解密密文的到明文：",info)
     else:
         print("验证失败！")
 
